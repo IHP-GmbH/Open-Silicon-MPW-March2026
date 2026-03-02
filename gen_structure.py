@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright 2026 IHP OPEN PDK Authors
+# SPDX-License-Identifier: Apache-2.0
 import json
 import os
 import random

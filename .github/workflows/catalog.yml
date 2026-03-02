@@ -1,0 +1,100 @@
+name: Generate IP Catalog
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Generate catalog
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          repo_root = Path(
+              os.environ.get("GITHUB_WORKSPACE", str(Path.cwd()))
+          ).resolve()
+          ip_root = repo_root
+          items = []
+          errors = []
+
+          for info_path in ip_root.rglob("info.json"):
+              if ".git" in info_path.parts:
+                  continue
+              try:
+                  data = json.loads(info_path.read_text(encoding="utf-8"))
+                  location = info_path.parent.relative_to(ip_root).as_posix()
+                  item = {
+                      "name": str(data.get("name", "")),
+                      "design_type": str(data.get("design_type", "")),
+                      "technology": str(data.get("technology", "")),
+                      "unique_id": str(data.get("unique_id", "")),
+                      "location": location,
+                  }
+                  missing = [key for key, value in item.items() if not value]
+                  if missing:
+                      raise ValueError(f"Missing fields: {', '.join(missing)}")
+                  items.append(item)
+              except (OSError, json.JSONDecodeError, ValueError) as exc:
+                  errors.append(f"{info_path}: {exc}")
+
+          items.sort(key=lambda item: (item["name"].lower(), item["unique_id"].lower()))
+          seen = set()
+          unique = []
+          for item in items:
+              key = (
+                  item["name"],
+                  item["design_type"],
+                  item["technology"],
+                  item["unique_id"],
+                  item["location"],
+              )
+              if key in seen:
+                  continue
+              seen.add(key)
+              unique.append(item)
+
+          lines = [
+              "# Catalog",
+              "",
+              "| Name | Type | Technology | ID | Location |",
+              "| --- | --- | --- | --- | --- |",
+          ]
+          for item in unique:
+              lines.append(
+                  f"| {item['name']} | {item['design_type']} |"
+                  f" {item['technology']} | {item['unique_id']} | {item['location']} |"
+              )
+
+          (repo_root / "IP" / "Catalog.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+          if errors:
+              print("Errors found while reading info.json files:", file=sys.stderr)
+              for error in errors:
+                  print(f"- {error}", file=sys.stderr)
+              sys.exit(1)
+          PY
+
+      - name: Commit catalog if changed
+        run: |
+          if ! git diff --quiet -- IP/Catalog.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add IP/Catalog.md
+            git commit -m "Update IP catalog"
+            git push
+          fi

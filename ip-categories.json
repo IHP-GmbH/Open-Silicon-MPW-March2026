@@ -1,0 +1,48 @@
+{
+  "Analog": {
+    "Bandgap Reference": "BGR",
+    "Comparator": "CMP",
+    "Operational Amplifier": "OPA",
+    "Low Dropout Regulator": "LDO",
+    "Voltage Reference": "VREF",
+    "Charge Pump": "CP",
+    "Temperature Sensor": "TSENSE",
+    "Oscillator": "OSC",
+    "Power Management IC": "PMIC"
+  },
+  "Digital": {
+    "Microcontroller": "MCU",
+    "Microprocessor": "MPU",
+    "RISC-V Core": "RISCV",
+    "Memory Controller": "MEMCTRL",
+    "DMA Controller": "DMA",
+    "Security Engine": "SEC",
+    "Cryptographic Accelerator": "CRYPTO",
+    "Interconnect/Fabric": "NOC",
+    "GPIO": "GPIO",
+    "Timer/Counter": "TIMER",
+    "UART": "UART",
+    "SPI": "SPI",
+    "I2C": "I2C"
+  },
+  "Mixed-Signal": {
+    "Analog to Digital Converter": "ADC",
+    "Digital to Analog Converter": "DAC",
+    "Phase-Locked Loop": "PLL",
+    "Sigma-Delta Modulator": "SDM",
+    "Clock and Data Recovery": "CDR",
+    "SerDes": "SERDES",
+    "Mixed-Signal PHY": "MSPHY"
+  },
+  "RF": {
+    "Low Noise Amplifier": "LNA",
+    "Power Amplifier": "PA",
+    "Mixer": "MIX",
+    "Voltage-Controlled Oscillator": "VCO",
+    "RF PLL": "RFPLL",
+    "Frequency Synthesizer": "FSYN",
+    "RF Front End": "RFFE",
+    "RF Switch": "RFSW",
+    "Balun": "BALUN"
+  }
+}

@@ -94,7 +94,7 @@ dependency IPs. Those dependency IPs can be submodules and should follow the sam
 structure (`doc/`, `release/`, and design folders) as the top-level IP so that tooling
 and automated checks can treat them uniformly.
 
-### Release data placement
+## Release data placement
 
 The `release/` directory must contain production-ready files that enable automated DRC
 and LVS checks. Filenames and their corresponding locations under `release/<version>/`

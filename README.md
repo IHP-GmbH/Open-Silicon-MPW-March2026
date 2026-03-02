@@ -3,7 +3,8 @@
 ## IP development and contribution workflow
 
 Do not develop the IP directly in this repository. Use the generator script to create a
-standalone IP repository, then publish it on GitHub and request inclusion as a submodule.
+standalone IP repository, then publish it on GitHub and request inclusion as a submodule
+in the corresponding Open-Silicon-MPW repository.
 
 ```mermaid
 flowchart TD
@@ -19,29 +20,6 @@ Keep `doc/info.json` accurate throughout development. The metadata is used for I
 evaluation, maintenance, and provisioning, and it enables automated checks.
 Many of these checks will be handled by GitHub Actions (data consistency, DRC, LVS, linter).
 
-## Naming convention
-
-Format:
-
-```
-<TECH>__<subcategory-abbrev>-<4digits>
-```
-
-Components:
-
-- `TECH`: process provider family identifier, e.g. `SKY`, `GF`, `IHP`, `ICS`
-- `subcategory-abbrev`: abbreviation from `ip-categories.json`
-- `4digits`: randomly generated 4-digit decimal identifier
-
-The IP type is derived from the chosen subcategory when running the generator.
-
-Examples:
-
-```
-SKY__ADC-0421
-IHP__PLL-3840
-GF__MCU-1207
-```
 
 ## Generating a new IP structure
 
@@ -66,6 +44,29 @@ Before choosing a subcategory, review `IP-Categories.md` to select an appropriat
 Warning: Only subcategories defined in `ip-categories.json` are permitted.
 See `IP-Categories.md` for the allowed list.
 
+## Naming convention
+
+Format:
+
+```
+<TECH>__<subcategory-abbrev>-<4digits>
+```
+
+Components:
+
+- `TECH`: process provider family identifier, e.g. `SKY`, `GF`, `IHP`, `ICS`
+- `subcategory-abbrev`: abbreviation from `ip-categories.json`
+- `4digits`: randomly generated 4-digit decimal identifier
+
+The IP type is derived from the chosen subcategory when running the generator.
+
+Examples:
+
+```
+SKY__ADC-0421
+IHP__PLL-3840
+GF__MCU-1207
+```
 ## Recursive structure
 
 The generated IP has a full design structure at the top level and the same structure
@@ -80,6 +81,15 @@ structure (`doc/`, `release/`, and design folders) as the top-level IP.
 2) Create a GitHub repository using the generated directory name.
 3) Initialize and push your IP repository, then your repository can be added here
    as a submodule.
+
+```
+git init
+git add .
+git commit -s -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/<org>/<repo>.git
+git push -u origin main
+```
 4) Open a GitHub issue requesting the Open-Silicon-MPW team to add your repository as a submodule.
 
 Issue template (include the .gitmodules snippet):
@@ -96,13 +106,4 @@ Issue template (include the .gitmodules snippet):
 [submodule "<Category>/<TECH>__<subcategory-abbrev>-<4digits>"]
   path = <Category>/<TECH>__<subcategory-abbrev>-<4digits>
   url = https://github.com/<org>/<repo>.git
-```
-
-```
-git init
-git add .
-git commit -s -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/<org>/<repo>.git
-git push -u origin main
 ```

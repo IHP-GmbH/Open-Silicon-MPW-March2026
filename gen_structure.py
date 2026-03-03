@@ -111,6 +111,47 @@ def write_trl_template(
     shutil.copyfile(local_path, trl_path)
 
 
+def write_workflow_template(
+    base_dir: str,
+    workflow_source: str,
+    fallback_dir: Path,
+) -> None:
+    workflow_filename = "check-workflow-sync.yml"
+    workflows_base = os.path.join(base_dir, ".github", "workflows")
+    os.makedirs(workflows_base, exist_ok=True)
+    workflow_path = os.path.join(workflows_base, workflow_filename)
+    if os.path.isfile(workflow_path):
+        return
+
+    if workflow_source.startswith(("http://", "https://")):
+        workflow_url = f"{workflow_source.rstrip('/')}/{workflow_filename}"
+        try:
+            urllib.request.urlretrieve(workflow_url, workflow_path)
+            return
+        except (urllib.error.HTTPError, urllib.error.URLError) as exc:
+            fallback_path = fallback_dir / workflow_filename
+            if fallback_path.is_file():
+                shutil.copyfile(fallback_path, workflow_path)
+                return
+            raise FileNotFoundError(
+                "Workflow template download failed and no local template found. "
+                f"Provide '{workflow_filename}' under '{fallback_dir}' "
+                "or ensure workflows are available locally."
+            ) from exc
+
+    local_base = Path(workflow_source)
+    if not local_base.is_absolute():
+        local_base = (fallback_dir.parent / local_base).resolve()
+    local_path = local_base / workflow_filename
+    if not local_path.is_file():
+        raise FileNotFoundError(
+            "Workflow template not found. "
+            f"Provide '{workflow_filename}' under '{fallback_dir}' "
+            "or ensure workflows are available locally."
+        )
+    shutil.copyfile(local_path, workflow_path)
+
+
 def create_cell_structure(base: str, cell_name: str, mode: str) -> None:
     if mode == "D":
         base_paths = [
@@ -195,6 +236,8 @@ def create_ip_structure(
     tools_used: dict,
     trl_source: str,
     fallback_dir: Path,
+    workflow_source: str,
+    workflow_fallback_dir: Path,
 ) -> None:
     os.makedirs(os.path.join(base, "doc"), exist_ok=True)
     release_base = os.path.join(base, "release", release_version)
@@ -243,6 +286,7 @@ def create_ip_structure(
             handle.write("\n")
 
     write_trl_template(base, mode, trl_source, fallback_dir)
+    write_workflow_template(base, workflow_source, workflow_fallback_dir)
 
     release_note_path = os.path.join(base, "release", release_version, "ReleaseNote.md")
     if not os.path.isfile(release_note_path):
@@ -323,6 +367,8 @@ def main() -> int:
 
     trl_source = f"{repo_raw_base}/TRL-templates/"
     fallback_dir = Path(__file__).resolve().parent / "TRL-templates"
+    workflow_source = f"{repo_raw_base}/workflows"
+    workflow_fallback_dir = Path(__file__).resolve().parent / "workflows"
 
     create_ip_structure(
         root,
@@ -341,6 +387,8 @@ def main() -> int:
         tools_used,
         trl_source,
         fallback_dir,
+        workflow_source,
+        workflow_fallback_dir,
     )
 
     for cell in cells:
@@ -362,6 +410,8 @@ def main() -> int:
             tools_used,
             trl_source,
             fallback_dir,
+            workflow_source,
+            workflow_fallback_dir,
         )
 
     print(f"IP library created: {root}")

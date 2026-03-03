@@ -35,7 +35,7 @@ evaluation, maintenance, and provisioning, and it enables automated checks. Many
 these checks are expected to be handled by GitHub Actions (data consistency, DRC, LVS,
 and linting), so completeness and correctness are mandatory.
 
-## Generating a new IP structure
+## Generating a new IP structure - automated
 
 Use the `gen_structure.py` script outside this repository to initialize a new IP repo.
 The script performs the following actions to standardize layout and metadata:
@@ -59,7 +59,7 @@ category and abbreviation and to ensure consistency with the published taxonomy.
 Warning: Only subcategories defined in `ip-categories.json` are permitted. Refer to
 `IP-Categories.md` for the allowed list.
 
-## Naming convention
+## Naming convention - automated
 
 The top-level directory name must follow the format below.
 

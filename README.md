@@ -131,13 +131,13 @@ main repository):
 ## Submodule request
 
 - Repository URL: https://github.com/<org>/<repo>.git
-- Category directory: <Category> (Analog, Digital, RF, Mixed-Signal)
-- Submodule path: <Category>/<TECH>__<subcategory-abbrev>-<4digits>
+- Category directory: March-2026/<Category> (Analog, Digital, RF, Mixed-Signal)
+- Submodule path: March-2026/<Category>/<TECH>__<subcategory-abbrev>-<4digits>
 
 ### .gitmodules snippet
 
-[submodule "<Category>/<TECH>__<subcategory-abbrev>-<4digits>"]
-  path = <Category>/<TECH>__<subcategory-abbrev>-<4digits>
+[submodule "March-2026/<Category>/<TECH>__<subcategory-abbrev>-<4digits>"]
+  path = March-2026/<Category>/<TECH>__<subcategory-abbrev>-<4digits>
   url = https://github.com/<org>/<repo>.git
 ```
 

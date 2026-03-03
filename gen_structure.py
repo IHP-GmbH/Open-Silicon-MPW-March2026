@@ -278,9 +278,7 @@ def main() -> int:
             f"Unknown technology: {tech_arg}. Expected one of: {', '.join(sorted(tech_options))}"
         )
 
-    repo_raw_base = (
-        "https://raw.githubusercontent.com/IHP-GmbH/Open-Silicon-MPW-March2026/main"
-    )
+    repo_raw_base = "https://raw.githubusercontent.com/IHP-GmbH/Open-Silicon-MPW/main"
     categories_url = f"{repo_raw_base}/ip-categories.json"
     categories_path = Path(__file__).resolve().parent / "ip-categories.json"
     try:

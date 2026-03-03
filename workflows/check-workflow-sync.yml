@@ -1,9 +1,17 @@
 name: Check Workflow Sync
+# This workflow syncs workflows from the Open-Silicon-MPW repository into
+# .github/workflows-staged/ of the generated IP repository. It does not
+# update .github/workflows automatically. After a sync, it raises/updates an
+# issue with the list of staged files and a manual copy instruction.
 
 on:
   schedule:
     - cron: "0 3 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
 
 jobs:
   check:
@@ -17,38 +25,98 @@ jobs:
         env:
           TARGET_REPO: IHP-GmbH/Open-Silicon-MPW
           TARGET_BRANCH: main
-          SOURCE_DIR: workflows
         shell: bash
         run: |
           set -euo pipefail
 
-          if [ ! -d "${SOURCE_DIR}" ]; then
-            echo "::warning::${SOURCE_DIR} directory does not exist. Skipping check."
-            exit 0
-          fi
+          api_url="https://api.github.com/repos/${TARGET_REPO}/contents/workflows?ref=${TARGET_BRANCH}"
+          raw_base="https://raw.githubusercontent.com/${TARGET_REPO}/${TARGET_BRANCH}/workflows"
 
-          mapfile -t files < <(find "${SOURCE_DIR}" -maxdepth 1 -type f -printf '%f\n' | sort)
+          mapfile -t files < <(
+            python3 -c 'import json,sys,urllib.request;url=sys.argv[1];data=json.load(urllib.request.urlopen(url));files=[item.get("name","") for item in data if isinstance(data,list) and item.get("name","").endswith((".yml",".yaml")) and item.get("name","") != "check-workflow-sync.yml"];print("\n".join(sorted(files)))' "$api_url"
+          )
 
           if [ ${#files[@]} -eq 0 ]; then
-            echo "::warning::No workflow files found in ${SOURCE_DIR}. Skipping check."
+            echo "::warning::No workflow files to sync from ${TARGET_REPO}:${TARGET_BRANCH}/workflows. Skipping sync."
             exit 0
           fi
 
+          dest_dir=".github/workflows-staged"
+          echo "DEST_DIR=${dest_dir}" >> "$GITHUB_ENV"
+          mkdir -p "$dest_dir"
+
           missing=()
+          updated=()
 
           for file in "${files[@]}"; do
-            url="https://raw.githubusercontent.com/${TARGET_REPO}/${TARGET_BRANCH}/.github/workflows/${file}"
-            if ! curl -fsSL "$url" >/dev/null; then
+            src_url="${raw_base}/${file}"
+            dest_path="${dest_dir}/${file}"
+
+            if curl -fsSL "$src_url" -o "$dest_path"; then
+              updated+=("$file")
+            else
               missing+=("$file")
             fi
           done
 
+          if [ ${#updated[@]} -ne 0 ]; then
+            echo "Synced workflows from ${TARGET_REPO}:${TARGET_BRANCH}/workflows:"
+            for file in "${updated[@]}"; do
+              echo "- ${file}"
+            done
+            {
+              echo "UPDATED_FILES<<EOF"
+              printf '%s\n' "${updated[@]}"
+              echo "EOF"
+            } >> "$GITHUB_ENV"
+          fi
+
           if [ ${#missing[@]} -ne 0 ]; then
-            echo "Missing workflow files in ${TARGET_REPO}:${TARGET_BRANCH}/.github/workflows:"
+            echo "Missing workflow files in ${TARGET_REPO}:${TARGET_BRANCH}/workflows:"
             for file in "${missing[@]}"; do
               echo "- ${file}"
             done
             exit 1
           fi
 
-          echo "All workflow files in ${SOURCE_DIR} are available in ${TARGET_REPO}:${TARGET_BRANCH}/.github/workflows."
+      - name: Commit staged workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          dest_dir="${DEST_DIR:-.github/workflows-staged}"
+
+          if [ -z "${UPDATED_FILES:-}" ]; then
+            echo "No workflow updates to commit."
+            exit 0
+          fi
+
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes detected after staging."
+            exit 0
+          fi
+
+          git add "$dest_dir"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Stage workflows from Open-Silicon-MPW"
+          git push
+
+      - name: Create or update sync issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          dest_dir="${DEST_DIR:-.github/workflows-staged}"
+
+          if [ -z "${UPDATED_FILES:-}" ]; then
+            echo "No workflow updates to report."
+            exit 0
+          fi
+
+          title="Stage workflow updates from Open-Silicon-MPW"
+          body=$(printf "New workflow files were staged under %s:\n\n%s\n\nManual action:\nCopy the desired files from %s into .github/workflows to enable them.\n" "$dest_dir" "$UPDATED_FILES" "$dest_dir")
+
+          gh issue create --title "${title}" --body "${body}"

@@ -169,7 +169,7 @@ def create_cell_structure(base: str, cell_name: str, mode: str) -> None:
             "PlaceAndRoute/parasitics/spef",
             "Flow/scripts/LibreLane",
             "Flow/scripts/ORFS",
-            "testbench",
+            "testbenches",
             "verification/lint",
             "verification/cdc",
             "verification/drc",
@@ -193,21 +193,21 @@ def create_cell_structure(base: str, cell_name: str, mode: str) -> None:
             "netlist/rcx",
             "verification/drc",
             "verification/lvs",
-            "testbench/ac/xschem",
-            "testbench/tran/xschem",
-            "testbench/noise/xschem",
-            "testbench/corners/xschem",
-            "testbench/ac/qucs-s",
-            "testbench/tran/qucs-s",
-            "testbench/noise/qucs-s",
-            "testbench/corners/qucs-s",
+            "testbenches/ac/xschem",
+            "testbenches/tran/xschem",
+            "testbenches/noise/xschem",
+            "testbenches/corners/xschem",
+            "testbenches/ac/qucs-s",
+            "testbenches/tran/qucs-s",
+            "testbenches/noise/qucs-s",
+            "testbenches/corners/qucs-s",
         ]
 
     if mode == "M":
         base_paths.insert(6, "timing")
 
     if mode == "R":
-        base_paths.insert(-1, "testbench/em")
+        base_paths.insert(-1, "testbenches/em")
 
     for rel_path in base_paths:
         os.makedirs(os.path.join(base, rel_path), exist_ok=True)
@@ -242,6 +242,8 @@ def create_ip_structure(
     os.makedirs(os.path.join(base, "doc"), exist_ok=True)
     release_base = os.path.join(base, "release", release_version)
     os.makedirs(release_base, exist_ok=True)
+    measurements_base = os.path.join(base, "measurements", release_version)
+    os.makedirs(measurements_base, exist_ok=True)
     os.makedirs(os.path.join(release_base, "gds"), exist_ok=True)
     os.makedirs(os.path.join(release_base, "netlist"), exist_ok=True)
     os.makedirs(os.path.join(release_base, "doc"), exist_ok=True)

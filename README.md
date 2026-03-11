@@ -25,9 +25,8 @@ See `IP-Categories.md` for the current category table.
 
 ## IP development process
 
-See `IP-development-process.md` for the full to know the steps.
+See `IP-development-steps.md` for the full development steps.
 
 ## Submission process
 
 See `Submission-process.md` for the full submission steps.
-

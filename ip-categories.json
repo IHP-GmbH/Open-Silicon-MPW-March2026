@@ -3,6 +3,7 @@
     "Bandgap Reference": "BGR",
     "Comparator": "CMP",
     "Operational Amplifier": "OPA",
+    "Operational Transconductance Amplifier": "OTA",
     "Low Dropout Regulator": "LDO",
     "Voltage Reference": "VREF",
     "Charge Pump": "CP",

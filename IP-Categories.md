@@ -5,6 +5,7 @@
 | Analog | Bandgap Reference | BGR |
 | Analog | Comparator | CMP |
 | Analog | Operational Amplifier | OPA |
+| Analog | Operational Transconductance Amplifier | OTA |
 | Analog | Low Dropout Regulator | LDO |
 | Analog | Voltage Reference | VREF |
 | Analog | Charge Pump | CP |

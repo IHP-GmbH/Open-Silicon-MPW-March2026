@@ -4,7 +4,7 @@ The submission process happens on GitHub, and a submission request must be made
 before the deadline. All communication with customers is handled via GitHub
 issues.
 
-Request submodule inclusion.
+## Request submodule inclusion.
 
 Open a GitHub issue in [Open-Silicon-MPW](https://github.com/IHP-GmbH/Open-Silicon-MPW)
 with the title **Request for submission March-2026 repository name**,
@@ -27,3 +27,9 @@ requesting the submodule addition. Include a copy-ready `.gitmodules` snippet:
      path = March-2026/<Category>/IHP__<subcategory-abbrev><4digits>
      url = https://github.com/<org>/<repo>.git
    ```
+## Confirmation of the submitted design
+
+After the request your design will be evaluated by the foundry and you will get the confirmation 
+via github.
+
+

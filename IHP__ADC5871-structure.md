@@ -1,8 +1,8 @@
-# IHP__ADC-5871 structure
+# IHP__ADC5871 structure
 
 ```
-📁 IHP__ADC-5871/
-├── 📁 ADC-5871-main/
+📁 IHP__ADC5871/
+├── 📁 ADC5871-main/
 │   ├── 📁 layout/
 │   │   ├── 📁 def/
 │   │   ├── 📁 klayout/

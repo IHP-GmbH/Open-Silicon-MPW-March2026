@@ -1,14 +1,14 @@
-# IHP__MCU-4057 structure
+# IHP__MCU4057 structure
 
 ```
-📁 IHP__MCU-4057/
+📁 IHP__MCU4057/
 ├── 📁 dependencies/
 ├── 📁 doc/
 │   ├── Datasheet.md
 │   ├── info.json
 │   ├── Specification.md
 │   └── TRL-Digital-Hard-IP.md
-├── 📁 MCU-4057-main/
+├── 📁 MCU4057-main/
 │   ├── 📁 constraints/
 │   │   └── 📁 sdc/
 │   ├── 📁 Flow/

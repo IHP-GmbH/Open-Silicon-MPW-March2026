@@ -367,7 +367,7 @@ def main() -> int:
 
     ip_suffix = f"{random.randint(0, 9999):04d}"
     unique_id = ip_suffix
-    ip_name = f"{subcategory_abbrev}-{ip_suffix}"
+    ip_name = f"{subcategory_abbrev}{ip_suffix}"
     root = f"{tech}__{ip_name}"
     release_version = "v.1.0.0"
     process = "SG13G2"

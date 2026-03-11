@@ -99,8 +99,8 @@ would like to add more subcategories or abbreviations, request them via a GitHub
    In the standalone IP repository:
 
    - Implement the design and keep the directory layout intact.
-   - Keep the top cell name aligned with the generated name (for example,
-     `OPA-4532`) across all views in the repository.
+    - Keep the top cell name aligned with the generated name (for example,
+      `OPA4532`) across all views in the repository.
    - Maintain `doc/info.json` with accurate metadata, release paths, and
      dependencies.
    - Fill the corresponding Technology Readiness Level (TRL) document under
@@ -140,12 +140,12 @@ would like to add more subcategories or abbreviations, request them via a GitHub
 
    - Repository URL: https://github.com/<org>/<repo>.git
    - Category directory: March-2026/<Category> (Analog, Digital, RF, Mixed-Signal)
-   - Submodule path: March-2026/<Category>/IHP__<subcategory-abbrev>-<4digits>
+    - Submodule path: March-2026/<Category>/IHP__<subcategory-abbrev><4digits>
 
    ### .gitmodules snippet
 
-   [submodule "March-2026/<Category>/IHP__<subcategory-abbrev>-<4digits>"]
-     path = March-2026/<Category>/IHP__<subcategory-abbrev>-<4digits>
+    [submodule "March-2026/<Category>/IHP__<subcategory-abbrev><4digits>"]
+      path = March-2026/<Category>/IHP__<subcategory-abbrev><4digits>
      url = https://github.com/<org>/<repo>.git
    ```
 

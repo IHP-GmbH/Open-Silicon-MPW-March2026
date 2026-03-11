@@ -7,8 +7,12 @@ issues.
 Request submodule inclusion.
 
 Open a GitHub issue in [Open-Silicon-MPW](https://github.com/IHP-GmbH/Open-Silicon-MPW)
-with the title **Request for submission March-2026 IHP__<subcategory-abbrev><4digits>**,
+with the title **Request for submission March-2026 repository name**,
 requesting the submodule addition. Include a copy-ready `.gitmodules` snippet:
+   
+> **Note**
+> The title must have your repository name in a format: `IHP__<subcategory><4digits>`.
+
 
    ```
    ## Submodule request for March-2026 Open-Silicon MPW
